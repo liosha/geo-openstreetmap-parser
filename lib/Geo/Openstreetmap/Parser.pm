@@ -17,6 +17,22 @@ Creates a parser object
 
     my $parser = Geo::Openstreetmap::Parser->new( node => \&process_node, ... );
 
+    sub process_node {
+        my ($obj) = @_;
+        ...
+    }
+
+Callbacks are possible for any tag, but useful for osm primitives:
+    node
+    way
+    relation
+
+Callback function receives hash with params:
+    attr    - hash with xml attributes
+    tag     - hash with osm tags
+    nd      - array of node_ids (for ways)
+    member  - array of hashes like { type => 'way', role => 'from', ref => '-1' } (for relations)
+
 =cut
 
 sub new
@@ -31,7 +47,7 @@ sub new
 
 =method parse
 
-Parses XML input, executing callback functions for every OSM object
+Parses XML input, executing defined callback functions for OSM objects
 
     $parser->parse( *STDIN );
 
