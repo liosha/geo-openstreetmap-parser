@@ -79,10 +79,10 @@ sub _init_parser
                     my $obj = pop @path;
 
                     for ( $el ) {
-                        $path[-1]->{$el}->{$obj->{attr}->{k}} = $obj->{attr}->{v}   when 'tag';
-                        push @{$path[-1]->{$el}}, $obj->{attr}->{ref}               when 'nd';
-                        push @{$path[-1]->{$el}}, $obj->{attr}                      when 'member';
-                        $self->{callback}->{$el}->($obj)                            when $self->{callback};
+                        when ('tag')    { $path[-1]->{$el}->{$obj->{attr}->{k}} = $obj->{attr}->{v} }
+                        when ('nd')     { push @{$path[-1]->{$el}}, $obj->{attr}->{ref} }
+                        when ('member') { push @{$path[-1]->{$el}}, $obj->{attr} }
+                        when ($self->{callback})    { $self->{callback}->{$el}->($obj) }
                     }
                 },
         });
