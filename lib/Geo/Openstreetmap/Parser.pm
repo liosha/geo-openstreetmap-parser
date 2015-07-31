@@ -78,23 +78,12 @@ sub _init_parser
                     my ($expat, $el) = @_;
                     my $obj = pop @path;
 
-                    for ( $el ) {
-                        when ('tag')    { $path[-1]->{$el}->{$obj->{attr}->{k}} = $obj->{attr}->{v} }
-                        when ('nd')     { push @{$path[-1]->{$el}}, $obj->{attr}->{ref} }
-                        when ('member') { push @{$path[-1]->{$el}}, $obj->{attr} }
-                        when ($self->{callback})    { $self->{callback}->{$el}->($obj) }
-                    }
+                    if ($el eq 'tag')    { $path[-1]->{$el}->{$obj->{attr}->{k}} = $obj->{attr}->{v} }
+                    if ($el eq 'nd')     { push @{$path[-1]->{$el}}, $obj->{attr}->{ref} }
+                    if ($el eq 'member') { push @{$path[-1]->{$el}}, $obj->{attr} }
+                    if (my $cb = $self->{callback}->{$el})    { $cb->($obj) }
                 },
         });
-    return;
-}
-
-
-sub _process_object
-{
-    my ($self, $el, $obj) = @_;
-
-    $self->{$el}->($obj)  if $self->{$el};
     return;
 }
 
